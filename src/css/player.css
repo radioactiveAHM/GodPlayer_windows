@@ -1,0 +1,58 @@
+.player{
+    /* main */
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: default;
+    gap: 5px;
+}
+.player>*{
+    width: 40px;
+    height: 40px;
+}
+
+#timebar{
+    width: 150px;
+    background-color: var(--m1);
+    border-radius: 20px 10px;
+    overflow: hidden;
+}
+#bar{
+    transition: 0.5s linear;
+    border-radius: 20px 10px;
+    background-color: var(--m2);
+    width: 0%;
+    height: 100%;
+}
+#dur{
+    border-radius: 20px 10px;
+    background-color: var(--m1);
+    color: var(--m2);
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.back_for{
+    background-color: var(--m1);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--m2);
+    overflow: hidden;
+}
+.back_for>*{
+    width: 100%;
+    height: auto;
+}
+
+
+@media only screen and (min-device-width: 600px){
+    #timebar{
+        width: 300px;
+    }
+}

@@ -1,0 +1,48 @@
+#pbtn{
+    margin-right: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+#pbtn>div{
+    position: absolute;
+    border-radius: 10px;
+}
+#pbtn>div.green{
+    height: 100%;
+    width: 100%;
+    background-color: var(--m1);
+    animation: playing 5s infinite linear;
+    animation-play-state: paused;
+}
+#pbtn>div.purple{
+    height: 75%;
+    width: 75%;
+    background-color: var(--m2);
+    animation: playing_back 5s infinite linear;
+    animation-play-state: paused;
+}
+
+@keyframes playing{
+    0%{
+        transform: rotate(0deg);
+    }
+    50%{
+        transform: rotate(180deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}
+@keyframes playing_back{
+    0%{
+        transform: rotate(0deg);
+    }
+    50%{
+        transform: rotate(-180deg);
+    }
+    100%{
+        transform: rotate(-360deg);
+    }
+}

@@ -1,0 +1,102 @@
+.music{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 10px;
+    height: 95vh;
+    width: 95vw;
+    border-radius: 30px;
+    box-shadow: 0px 0px 10px 2px;
+    background-color: var(--c2);
+}
+
+.songs{
+    width: 100%;
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    height: 88%;
+}
+.songs>ol::-webkit-scrollbar{
+    display: none;
+}
+.songs>ol{
+    padding: 0;
+    overflow: auto;
+}
+.songs>ol>li{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    list-style: none;
+    transition: 0.2s linear;
+}
+.songs>ol>li>img{
+    padding: 3px;
+    width: 8%;
+}
+.songs>ol>li>svg{
+    padding: 3px;
+    width: 8%;
+}
+.songs>ol>li>p{
+    font-size: 1.2rem;
+}
+.songs>ol>li:hover{
+    background-color: var(--c1);
+}
+
+.songs>ol.containerwin>li:hover{
+    background-color: var(--c2);
+}
+.songs>ol.containerwin{
+    display: flex;
+    flex-wrap: wrap;
+    
+}
+.songs>ol.containerwin>li{
+    background-color: unset !important;
+    margin-top: 5px;
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    list-style: none;
+    border-bottom: unset;
+    padding: 2px;
+}
+.songs>ol.containerwin>li>img{
+    padding: 0;
+    width: 90%;
+    border-radius: 10px;
+}
+.songs>ol.containerwin>li>svg{
+    padding: 0;
+    width: 90%;
+    border-radius: 10px;
+}
+.songs>ol.containerwin>li>p{
+    width: 90%;
+    padding: 2px;
+    font-size: 1rem;
+    text-align: center;
+}
+.songs>ol.containerwin>li>p::-webkit-scrollbar{
+    display: none;
+}
+@media only screen and (max-device-width: 600px){
+    .songs>ol>li>img{
+        width: 20%;
+    }
+    .songs>ol.containerwin>li{
+        width: 33.3%;
+    }
+    .songs>ol.containerwin>li>p{
+        overflow: auto;
+        max-height: 60px;
+    }
+}

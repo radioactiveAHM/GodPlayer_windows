@@ -1,0 +1,23 @@
+{
+  "name": "godplayer",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "tauri": "tauri"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.2.2",
+    "vite": "^4.0.0",
+    "vite-plugin-solid": "^2.3.0"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^1.2.0",
+    "solid-heroicons": "^3.1.1",
+    "solid-js": "^1.4.7"
+  }
+}

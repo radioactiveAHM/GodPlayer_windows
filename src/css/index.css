@@ -1,0 +1,23 @@
+:root{
+    --c1:rgb(80, 64, 109);
+    --c2:rgb(69, 162, 95);
+    --m1:rgba(255, 255, 255, 0.4);
+    --m2:rgb(80, 64, 109);
+}
+@font-face {
+    font-family: god;
+    src: url("./fonts/arial.ttf");
+}
+*{
+    box-sizing: border-box;
+    margin: 0;
+    font-family: god;
+    scroll-behavior: smooth;
+}
+body{
+    background-color: var(--c1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
