@@ -7,6 +7,6 @@ import "./css/music.css"
 import "./css/pbtn.css"
 import "./css/player.css"
 import "./css/theme.css"
-import "./css/loading.css"
+import "./css/foldering.css"
 
 render(() => <App />, document.getElementById("root"));

@@ -1,13 +1,23 @@
 # GodPlayer
 
-fancy music player ready to use
+Fancy music player ready to use built with Tauri + Solid-JS
 
-# usage
+## Notes
 
-all songs from "C:\Users\{user}\Music" load in music player
+* **Default folder** is user music folder that you can modify in settings
 
-run "cargo tauri build" to build app
+* App might be unstable and crash
 
-# Info
+## Build App
 
-app built using Tauri + Solid-js
+### Internet required
+
+1. Open command in source folder then run
+2. `npm install` then `cd src-tauri` then `cargo tauri build`
+3. wait till complete (might take a while)
+4. the bundle build is in `godplayer-windows\src-tauri\target\release\bundle\msi`
+
+## Screenshots
+
+![screenshot 1](./ScreenShots/Screenshot%202023-03-17%20143857.png)
+![screenshot 2](./ScreenShots/Screenshot%202023-03-17%20143948.png)

@@ -4,14 +4,10 @@
     --m1:rgba(255, 255, 255, 0.4);
     --m2:rgb(80, 64, 109);
 }
-@font-face {
-    font-family: god;
-    src: url("./fonts/arial.ttf");
-}
 *{
+    font-family: Arial;
     box-sizing: border-box;
     margin: 0;
-    font-family: god;
     scroll-behavior: smooth;
 }
 body{

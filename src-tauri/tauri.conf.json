@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "godplayer",
-    "version": "0.0.6"
+    "version": "0.3.6"
   },
   "tauri": {
     "allowlist": {
@@ -21,7 +21,7 @@
         "all":true
       },
       "fs":{
-        "scope":["$AUDIO","$AUDIO/*", "$TEMP", "$TEMP/*", "$CACHE/*", "$CACHE/Temp/godplayer/*"],
+        "scope":["$TEMP", "$TEMP/*"],
         "readFile":true,
         "readDir":true
       }
@@ -35,10 +35,6 @@
       },
       "externalBin": [],
       "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
         "icons/icon.ico"
       ],
       "identifier": "com.godplayer.dev",
@@ -50,7 +46,7 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [],
+      "resources": ["./Config.json"],
       "shortDescription": "",
       "targets": "all",
       "windows": {
@@ -68,10 +64,10 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "height": 700,
         "resizable": true,
-        "title": "godplayer",
-        "width": 800
+        "title": "Godplayer",
+        "width": 1200
       }
     ]
   }

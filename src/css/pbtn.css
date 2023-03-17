@@ -1,48 +1,129 @@
 #pbtn{
-    margin-right: 4px;
+    position: relative;
+    margin-right: 10px;
+}
+#pbtn>div.dancer{
+    border-radius: 10px;
+    animation: dance 5s linear infinite;
+    background-color: var(--m1);
+    width: 95%;
+    height: 95%;
+    position: absolute;
+    z-index: 1;
+    animation-play-state: paused;
+}
+#pl_po{
+    z-index: 2;
+    right: 12%;
+    top: 7%;
+    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
+    flex-direction: column;
+    width: 36px;
+    height: 36px;
 }
-#pbtn>div{
-    position: absolute;
-    border-radius: 10px;
-}
-#pbtn>div.green{
-    height: 100%;
-    width: 100%;
-    background-color: var(--m1);
-    animation: playing 5s infinite linear;
+#pl_po>div{
     animation-play-state: paused;
-}
-#pbtn>div.purple{
-    height: 75%;
-    width: 75%;
     background-color: var(--m2);
-    animation: playing_back 5s infinite linear;
-    animation-play-state: paused;
+    width: 60%;
+    height: 20%;
 }
 
-@keyframes playing{
+#pl_po>div:nth-child(1){
+    animation-name: pl_1c;
+    animation-duration: 0.2s;
+    animation-timing-function: linear;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-play-state: running;
+}
+#pl_po>div:nth-child(3){
+    animation-name: pl_3c;
+    animation-duration: 0.2s;
+    animation-timing-function: linear;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-play-state: running;
+}
+#pl_po>div:nth-child(2){
+    animation-name: pl_2c;
+    animation-duration: 0.2s;
+    animation-timing-function: linear;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-play-state: running;
+}
+
+/* I> */
+@keyframes pl_2c{
     0%{
         transform: rotate(0deg);
     }
-    50%{
-        transform: rotate(180deg);
+    100%{
+        border-radius: unset;
+        transform: rotate(90deg) translateY(3px) scaleX(1.2) scaleY(1.1);
+    }
+}
+
+@keyframes pl_1c{
+    0%{
+        transform: scaleX(1);
+    }
+    100%{
+        border-radius: 10px;
+        transform: scaleX(1) rotate(60deg) ;
+    }
+}
+@keyframes pl_3c{
+    0%{
+        transform: scaleX(1);
+    }
+    100%{
+        border-radius: 10px;
+        transform:  scaleX(1) rotate(-60deg);
+    }
+}
+
+/* |=| */
+@keyframes po_2c{
+    0%{
+        border-radius: unset;
+        transform: rotate(90deg) translateY(5px) scaleX(1.25) scaleY(1.6);
+    }
+    100%{
+        border-radius: 0px;
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes po_1c{
+    0%{
+        border-radius: 2px;
+        transform: scaleX(1.4) rotate(60deg);
+    }
+    100%{
+        border-radius: 3px 3px 0px 0px;
+        transform: scaleX(1);
+    }
+}
+@keyframes po_3c{
+    0%{
+        border-radius: 2px;
+        transform:  scaleX(1.4) rotate(-60deg);
+    }
+    100%{
+        border-radius: 0px 0px 3px 3px;
+        transform: scaleX(1);
+    }
+}
+
+@keyframes dance {
+    0%{
+        transform: rotate(0deg);
     }
     100%{
         transform: rotate(360deg);
-    }
-}
-@keyframes playing_back{
-    0%{
-        transform: rotate(0deg);
-    }
-    50%{
-        transform: rotate(-180deg);
-    }
-    100%{
-        transform: rotate(-360deg);
     }
 }
