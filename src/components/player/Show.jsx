@@ -50,7 +50,8 @@ function Show(income) {
             <div class="menu" tabIndex="0">
                 <Icon path={ellipsisVertical}/>
                 <Icon id="folder" onclick={sf} path={folder} />
-                <Icon path={cog_6Tooth}/>
+                <Icon path={cog_6Tooth}
+                onclick={()=>{document.getElementById("settings").style.display = "block"}}/>
             </div>
             <div class="right">
                 <div class="mcount">{income.musics() && income.musics().length}</div>

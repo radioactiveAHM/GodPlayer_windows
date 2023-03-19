@@ -1,5 +1,6 @@
 import Music from "./components/Music";
 import Foldering from "./components/player/Foldering";
+import Settings from "./components/player/Settings";
 import { invoke } from "@tauri-apps/api";
 function App() {
 
@@ -16,10 +17,11 @@ function App() {
   })
 
   return (
-   <div>
-    <Foldering/>
-    <Music/>
-   </div>
+    <div>
+      <Settings/>
+      <Foldering/>
+      <Music/>
+    </div>
   )
 }
 

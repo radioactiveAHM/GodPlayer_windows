@@ -87,6 +87,8 @@ fn cover_caching() -> Vec<SongMeta>{
         }
         dirs = dirs_temp;
     }
+    // NEW -> list of covers in temp folder
+    let mut cvs = std::fs::read_dir(&temp).unwrap();
 
     let mut config:Vec<SongMeta> = Vec::new();
     let mut couner:usize = 1;
@@ -122,14 +124,15 @@ fn cover_caching() -> Vec<SongMeta>{
                     );
                 }
                     couner += 1;
+
+                    // save pictures to temp folders
                     for pic in s.pictures(){
-                        // std::fs::write("m.jpg", &pic.data).unwrap();
+                        if temp.join(&nameer.file_name().unwrap().to_str().unwrap().replace(".mp3", ".jpg")).exists() {continue}
                         std::fs::write(&temp.join(
                             format!(
                                 "{}.jpg", nameer.to_str().unwrap().split("\\").collect::<Vec<&str>>().pop().unwrap()
                                 .split(".").collect::<Vec<&str>>()[0]
                             )
-            
                         ), &pic.data).unwrap();
                     }
             },
@@ -204,14 +207,6 @@ fn main() {
             }
             // !DEBUG
             // OLD
-            // tauri::http::ResponseBuilder::new()
-            // .header("Origin", "*")
-            // .header("Connection", "Keep-Alive")
-            // .header("Accept-Ranges", "bytes")
-            // .header("Content-Length", music.len())
-            // .mimetype("audio/mpeg")
-            // .status(200)
-            // .body(music)
         })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

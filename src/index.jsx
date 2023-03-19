@@ -8,5 +8,6 @@ import "./css/pbtn.css"
 import "./css/player.css"
 import "./css/theme.css"
 import "./css/foldering.css"
+import "./css/Settings.css"
 
 render(() => <App />, document.getElementById("root"));
