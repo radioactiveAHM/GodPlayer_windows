@@ -1,5 +1,5 @@
 import { Icon } from "solid-heroicons";
-import { folder, cog_6Tooth, ellipsisVertical } from "solid-heroicons/solid-mini";
+import { folder, cog_6Tooth } from "solid-heroicons/solid-mini";
 import { createSignal } from "solid-js";
 
 function Show(income) {
@@ -47,19 +47,14 @@ function Show(income) {
 
     return (
         <div class="show">
-            <div class="menu" tabIndex="0">
-                <Icon path={ellipsisVertical}/>
-                <Icon id="folder" onclick={sf} path={folder} />
-                <Icon path={cog_6Tooth}
-                onclick={()=>{document.getElementById("settings").style.display = "block"}}/>
+            <div class="mcount">{income.musics() && income.musics().length}</div>
+            <div class="theme" onclick={themer}>
+                <div></div>
+                <div></div>
             </div>
-            <div class="right">
-                <div class="mcount">{income.musics() && income.musics().length}</div>
-                <div class="theme" onclick={themer}>
-                    <div></div>
-                    <div></div>
-                </div>
-            </div>
+            <Icon id="folder" onclick={sf} path={folder} />
+            <Icon path={cog_6Tooth}
+            onclick={()=>{document.getElementById("settings").style.display = "block"}}/>
         </div>
     );
 }

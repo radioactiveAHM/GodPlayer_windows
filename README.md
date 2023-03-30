@@ -19,5 +19,5 @@ Fancy music player ready to use built with Tauri + Solid-JS
 
 ## Screenshots
 
-![screenshot 1](./ScreenShots/Screenshot%202023-03-17%20143857.png)
-![screenshot 2](./ScreenShots/Screenshot%202023-03-17%20143948.png)
+![screenshot 1](./ScreenShots/1.png)
+![screenshot 2](./ScreenShots/2.png)

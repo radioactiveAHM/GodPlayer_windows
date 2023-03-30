@@ -7,7 +7,7 @@ use id3::{Tag, TagLike};
 
 fn cube_remover(txt:&str) -> String{
     let expect = ['q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k',
-    'l','z','x','c','v','b','n','m','.',' ','&','*','!','@','#','$','%','^','&', '1', '2','3','4','5',
+    'l','z','x','c','v','b','n','m','.','\'',' ','&','*','!','@','#','$','%','^','&', '1', '2','3','4','5',
     '6','7','8','9','0'];
 
     txt.to_ascii_lowercase().chars()
@@ -87,8 +87,6 @@ fn cover_caching() -> Vec<SongMeta>{
         }
         dirs = dirs_temp;
     }
-    // NEW -> list of covers in temp folder
-    let mut cvs = std::fs::read_dir(&temp).unwrap();
 
     let mut config:Vec<SongMeta> = Vec::new();
     let mut couner:usize = 1;

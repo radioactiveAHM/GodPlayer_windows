@@ -1,6 +1,6 @@
 // icons
 import { Icon } from "solid-heroicons";
-import {chevronLeft, chevronRight, play} from "solid-heroicons/solid-mini"
+import {chevronLeft, chevronRight} from "solid-heroicons/solid-mini"
 
 function Player(income){
     let ex;

@@ -3,7 +3,7 @@ import { musicalNote} from "solid-heroicons/solid-mini";
 
 function Music(income) {
     return (
-    <li class="win" onclick={[income.play, income.song]} name={income.song.meta.no}>
+    <li class="win" onclick={[income.play, income.song]} name={income.song.meta.no} id={"no"+income.song.meta.no}>
         <div class="cover_title">
             {income.song.c ? <img src={income.song.c} /> : <Icon path={musicalNote} />}
             <p class="artist">
