@@ -6,6 +6,10 @@ import { readDir } from "@tauri-apps/api/fs";
 import { cacheDir } from "@tauri-apps/api/path";
 import { invoke } from "@tauri-apps/api";
 
+// icon
+import { Icon } from "solid-heroicons";
+import { magnifyingGlass, musicalNote } from "solid-heroicons/solid-mini";
+
 function Music() {
   const [musics, SetMusics] = createSignal([]);
   const [current, SetCurrent] = createSignal("");
@@ -65,16 +69,30 @@ function Music() {
   }
 
   function next_s() {
+    // setup shuffle
+    // NEW
     const songs_list = musics();
-    for (let i in songs_list) {
-      if (songs_list[i].s == currentsong()) {
-        let song = songs_list[parseInt(i) + 1];
-        SetCurrentsongcover({"cover":song.c, "meta":song.meta});
-        setNo(song.meta.no);
-        SetCurrent("https://stream.localhost/"+song.s);
-        SetCurrentsong(song.s);
-        document.getElementById("ap").play();
-        break;
+    if (document.getElementById("shuffle_id").getAttribute("name")=="enabled"){
+      // when shuffle active
+      const chosen = songs_list[Math.floor(Math.random()*songs_list.length)];
+      SetCurrentsongcover({"cover":chosen.c, "meta":chosen.meta});
+      setNo(chosen.meta.no);
+      SetCurrent("https://stream.localhost/"+chosen.s);
+      SetCurrentsong(chosen.s);
+      document.getElementById("ap").play();
+
+    } else {
+
+      for (let i in songs_list) {
+        if (songs_list[i].s == currentsong()) {
+          let song = songs_list[parseInt(i) + 1];
+          SetCurrentsongcover({"cover":song.c, "meta":song.meta});
+          setNo(song.meta.no);
+          SetCurrent("https://stream.localhost/"+song.s);
+          SetCurrentsong(song.s);
+          document.getElementById("ap").play();
+          break;
+        }
       }
     }
   }
@@ -92,7 +110,6 @@ function Music() {
       }
     }
   }
-  // ! dev -> handle search func
   function searcher(event){
     let search = event.target.value.toLowerCase();
     let result = [];
@@ -109,19 +126,30 @@ function Music() {
     }
   }
 
+  function empty_search(){
+    document.getElementById("seacher").value = "";
+    Setsearch([]);
+  }
+
 
   function expander_stuff(hs){
     const aside = document.querySelector("aside");
     for (const child of aside.children){
-      if (child.className == "expander" || child.className == "show"){
-        continue;
-      }
+      if (child.className == "expander" || child.className == "show"){continue}
       if (hs == 0){
-        child.style.display = "none";
+        if (child.className == "search_icon"){
+          child.style.display = "block";
+        }else{
+          child.style.display = "none";
+        }
       } else if (hs == 1){
         if (child.className == "currentsong"){
           child.style.display = "block";
-        }else{
+        }
+        else if (child.className == "search_icon"){
+          child.style.display = "none";
+        }
+        else{
           child.style.display = "flex";
         }
       }
@@ -147,7 +175,11 @@ function Music() {
 
       <aside>
         <div id="expand" class="expander" onClick={expander}><div></div><div></div></div>
-        <input type="text" id="seacher" placeholder="Search" onChange={searcher}/>
+        <div class="search_icon" onClick={expander}>
+          <Icon path={magnifyingGlass}/>
+        </div>
+        <input type="text" id="seacher" placeholder="Search" onInput={searcher}/>
+        {search().length>0 && <div class="empty_search" onClick={empty_search}><p>Clear</p></div>}
         <div class="search_result">
             <For each={search()}>
               {(result)=>(
@@ -163,7 +195,7 @@ function Music() {
         />
         {currentsongcover() &&
         (<div class="currentsong">
-          <img src={currentsongcover().cover}/>
+          {currentsongcover().cover ? <img src={currentsongcover().cover}/> : <Icon path={musicalNote}/>}
           <p>{currentsongcover().meta.artist}</p>
           <p>{currentsongcover().meta.title}</p>
           <p>{currentsongcover().meta.year}</p>

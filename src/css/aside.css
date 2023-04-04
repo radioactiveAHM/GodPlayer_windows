@@ -27,15 +27,34 @@ aside>div.expander{
 aside>div.expander>div{
     width: 5px;
     height: 100%;
-    border-radius: 20px;
+    border-radius: 2px;
     background-color: var(--c1);
+}
+aside>.search_icon{
+    color: var(--m2);
+}
+aside>.search_icon>svg{
+    width: 30px;
 }
 aside>input{
     display: none;
     padding: 5px;
     width: 100%;
     background-color: var(--m1);
-    border: 0;
+    border-radius: 1px;
+    border: none;
+}
+aside>.empty_search{
+    background-color: var(--m1);
+    width: 100%;
+    color: var(--c2);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 2px;
+}
+aside>.empty_search>p{
+    text-align: center;
+    width: 100%;
 }
 /* TODO -> search result */
 aside>div.search_result{
@@ -60,15 +79,15 @@ aside>div.currentsong{
 aside>div.currentsong>*{
     margin-top: 5px;
     background-color: var(--m1);
+    padding: 2px;
 }
 aside>div.currentsong>img{
+    padding: unset;
     margin-top: 0;
 }
 aside>div.currentsong>img, aside>div.currentsong>svg{
+    background-color: unset;
+    color: var(--m2);
     width: 100%;
     aspect-ratio: 1/1;
-    /* border-radius: 50%; */
-}
-
-@keyframes expander {
 }

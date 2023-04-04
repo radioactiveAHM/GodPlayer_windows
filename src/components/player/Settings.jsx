@@ -22,13 +22,20 @@ function Settings (){
                 return {...prev, ...colors()}
             }
         );
-        invoke("config_save", {ng:JSON.stringify(config())})
+        invoke("config_save", {ng:JSON.stringify(config())});
+        location.reload();
     }
 
     function changeColorController(event){
-        SetColors(prev=>{
-            return {...prev, "active":true, [event.target.name]:event.target.value}
-        })
+        if (event.target.name == "active"){
+            SetColors(prev=>{
+                return {...prev, "active":event.target.checked}
+            })
+        }else{
+            SetColors(prev=>{
+                return {...prev, [event.target.name]:event.target.value}
+            })
+        }
     };
 
     return(
@@ -54,6 +61,7 @@ function Settings (){
                         <input type="color" name="m2" id="idcolor4" value={config().m2} onChange={changeColorController}/>
                     </div>
                 </div>
+                <input type="checkbox" name="active" id="active" onChange={changeColorController} checked={config().active}/>
             </div>
             <div class="settings_controll">
                 <Icon path={xMark} 

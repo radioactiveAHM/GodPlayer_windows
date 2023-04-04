@@ -14,6 +14,12 @@
     height: 35px;
 }
 
+div.player>.shuffle{
+    background-color: var(--m1);
+    border-radius: 50%;
+    padding: 5px;
+}
+
 #timebar{
     flex-grow: 1;
     position: relative;

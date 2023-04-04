@@ -21,24 +21,28 @@ function Show(income) {
             case 0:
                 color.style.setProperty("--c1", "#455d7a");
                 color.style.setProperty("--c2", "#a2a8d3");
+                color.style.setProperty("--m1", "rgba(255, 255, 255, 0.4)");
                 color.style.setProperty("--m2", "#f95959");
                 SetTheme(1);
                 break;
             case 1:
                 color.style.setProperty("--c1", "#a393eb");
                 color.style.setProperty("--c2", "#5e63b6");
+                color.style.setProperty("--m1", "rgba(255, 255, 255, 0.4)");
                 color.style.setProperty("--m2", "#f5c7f7");
                 SetTheme(2);
                 break;
             case 2:
                 color.style.setProperty("--c1", "#b56576");
                 color.style.setProperty("--c2", "#6d597a");
+                color.style.setProperty("--m1", "rgba(255, 255, 255, 0.4)");
                 color.style.setProperty("--m2", "black");
                 SetTheme(3);
                 break;
             case 3:
                 color.style.setProperty("--c1", "rgb(80, 64, 109)");
                 color.style.setProperty("--c2", "rgb(69, 162, 95)");
+                color.style.setProperty("--m1", "rgba(255, 255, 255, 0.4)");
                 color.style.setProperty("--m2", "rgb(80, 64, 109)");
                 SetTheme(0);
                 break;

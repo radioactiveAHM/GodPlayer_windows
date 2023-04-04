@@ -42,13 +42,16 @@
     padding: 0;
     width: 60%;
 }
+.colors>input{
+    width: 4%;
+}
 
 #settings>div.settings_controll{
     margin-top: 5px;
 }
 #settings>div.settings_controll>svg{
     color: var(--m2);
-    width: 5%;
+    width: 50px;
     float: right;
     transition: color 200ms linear;
     border-radius: 50%;
