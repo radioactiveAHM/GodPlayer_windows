@@ -8,8 +8,8 @@
   },
   "package": {
     "productName": "godplayer",
-    "version": "0.4.1"
-},
+    "version": "0.4.3"
+  },
   "tauri": {
     "allowlist": {
       "all": false,
@@ -28,32 +28,13 @@
     },
     "bundle": {
       "active": true,
-      "category": "DeveloperTool",
-      "copyright": "",
-      "deb": {
-        "depends": []
-      },
-      "externalBin": [],
       "icon": [
+		"icons/512x512.png",
         "icons/icon.ico"
       ],
       "identifier": "com.godplayer.dev",
-      "longDescription": "",
-      "macOS": {
-        "entitlements": null,
-        "exceptionDomain": "",
-        "frameworks": [],
-        "providerShortName": null,
-        "signingIdentity": null
-      },
       "resources": ["./Config.json"],
-      "shortDescription": "",
-      "targets": "all",
-      "windows": {
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": ""
-      }
+      "targets": "all"
     },
     "security": {
       "csp": null

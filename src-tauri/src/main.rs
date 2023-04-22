@@ -5,16 +5,6 @@
 
 use id3::{Tag, TagLike};
 
-fn cube_remover(txt:&str) -> String{
-    let expect = ['q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k',
-    'l','z','x','c','v','b','n','m','.','\'',' ','&','*','!','@','#','$','%','^','&', '1', '2','3','4','5',
-    '6','7','8','9','0'];
-
-    txt.to_ascii_lowercase().chars()
-    .map(|c| if expect.contains(&c) {c} else {' '})
-    .collect::<String>()
-}
-
 #[derive(serde::Serialize)]
 struct SongMeta{
     path:std::path::PathBuf,
@@ -110,16 +100,16 @@ fn cover_caching() -> Vec<SongMeta>{
                     });
                 } else {
                     config.push(
-                            SongMeta {
-                                path: song_f.clone(),
-                                artist: cube_remover(s.artist().unwrap_or("")),
-                                title: cube_remover(s.title().unwrap_or("")),
-                                genre: cube_remover(s.genre().unwrap_or("")),
-                                year: s.date_recorded().unwrap_or_default().year,
-                                duration: s.duration().unwrap_or(0),
-                                no: couner
-                        }
-                    );
+                        SongMeta {
+                            path: song_f.clone(),
+                            artist: s.artist().unwrap_or("").to_string(),
+                            title: s.title().unwrap_or("").to_string(),
+                            genre: s.genre().unwrap_or("").to_string(),
+                            year: s.date_recorded().unwrap_or_default().year,
+                            duration: s.duration().unwrap_or(0),
+                            no: couner
+                    }
+                );
                 }
                     couner += 1;
 

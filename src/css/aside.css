@@ -11,12 +11,17 @@ aside{
     overflow: hidden;
     overflow-y: scroll;
 }
+aside>.expander:hover, aside>.search_icon:hover, #folder:hover, #setting_icon:hover{
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+}
+
 aside::-webkit-scrollbar{
     display: none;
 }
 aside>div.expander{
     transform: rotate(90deg);
-    transition: transform 0.1s linear;
+    transition: 0.1s linear;
     width: 100%;
     height: 30px;
     display: flex;
@@ -31,6 +36,7 @@ aside>div.expander>div{
     background-color: var(--c1);
 }
 aside>.search_icon{
+    transition: 0.2s linear;
     color: var(--m2);
 }
 aside>.search_icon>svg{

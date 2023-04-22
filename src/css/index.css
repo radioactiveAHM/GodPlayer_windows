@@ -4,8 +4,12 @@
     --m1:rgba(255, 255, 255, 0.4);
     --m2:rgb(80, 64, 109);
 }
+@font-face {
+    font-family: god;
+    src: url("../Ubuntu-Regular.ttf");
+}
 *{
-    font-family: Arial;
+    font-family: god, Arial, Helvetica, sans-serif;
     box-sizing: border-box;
     margin: 0;
     scroll-behavior: smooth;

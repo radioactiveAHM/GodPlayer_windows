@@ -57,7 +57,7 @@ function Show(income) {
                 <div></div>
             </div>
             <Icon id="folder" onclick={sf} path={folder} />
-            <Icon path={cog_6Tooth}
+            <Icon id="setting_icon" path={cog_6Tooth}
             onclick={()=>{document.getElementById("settings").style.display = "block"}}/>
         </div>
     );

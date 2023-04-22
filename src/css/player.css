@@ -55,6 +55,9 @@ div.player>.shuffle{
     color: var(--m2);
     overflow: hidden;
 }
+.back_for:active{
+    border: 2px solid var(--m2);
+}
 .back_for>*{
     position: relative;
     width: 100%;
