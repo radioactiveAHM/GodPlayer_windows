@@ -1,3 +1,5 @@
+![App icon](./src-tauri/icons/icon.ico)
+
 # GodPlayer
 
 Fancy music player ready to use built with Tauri + Solid-JS
