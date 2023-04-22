@@ -6,7 +6,7 @@ Fancy music player ready to use built with Tauri + Solid-JS
 
 * **Default folder** is user music folder that you can modify in settings
 
-* App might be unstable and crash
+* ! If app crashes, run the app as administrator and try again
 
 ## Build App
 
