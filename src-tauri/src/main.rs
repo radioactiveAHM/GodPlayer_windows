@@ -13,7 +13,16 @@ struct SongMeta{
     genre:String,
     year:i32,
     duration:u32,
-    no:usize
+    no:usize,
+    lyric: Vec<String>,
+    cover: std::path::PathBuf
+}
+fn cover_ceck(p:std::path::PathBuf)->std::path::PathBuf{
+    if p.exists(){
+        p
+    } else {
+        std::path::PathBuf::new()
+    }
 }
 
 #[derive(serde::Deserialize)]
@@ -77,12 +86,10 @@ fn cover_caching() -> Vec<SongMeta>{
         }
         dirs = dirs_temp;
     }
-
     let mut config:Vec<SongMeta> = Vec::new();
     let mut couner:usize = 1;
     for song_f in songs_list{
         let nameer = song_f.clone();
-        // ! DEV
         let song = Tag::read_from_path(&nameer);
         match song {
             id3::Result::Ok(s)=> {
@@ -96,7 +103,13 @@ fn cover_caching() -> Vec<SongMeta>{
                             genre: "".to_string(),
                             year: 0,
                             duration: 0,
-                            no: couner
+                            no: couner,
+                            lyric: vec![String::from("")],
+                            cover: cover_ceck(temp.join(
+                                format!(
+                                    "{}", &nameer.file_name().unwrap().to_str().unwrap().replace(".mp3", ".jpg")
+                                )
+                            ))
                     });
                 } else {
                     config.push(
@@ -107,21 +120,40 @@ fn cover_caching() -> Vec<SongMeta>{
                             genre: s.genre().unwrap_or("").to_string(),
                             year: s.date_recorded().unwrap_or_default().year,
                             duration: s.duration().unwrap_or(0),
-                            no: couner
+                            no: couner,
+                            lyric: s.lyrics().map(|ly| ly.to_string()).collect::<Vec<String>>(),
+                            cover: cover_ceck(temp.join(
+                                format!(
+                                    "{}", &nameer.file_name().unwrap().to_str().unwrap().replace(".mp3", ".jpg")
+                                )
+                            ))
                     }
                 );
                 }
                     couner += 1;
-
                     // save pictures to temp folders
                     for pic in s.pictures(){
-                        if temp.join(&nameer.file_name().unwrap().to_str().unwrap().replace(".mp3", ".jpg")).exists() {continue}
-                        std::fs::write(&temp.join(
-                            format!(
-                                "{}.jpg", nameer.to_str().unwrap().split("\\").collect::<Vec<&str>>().pop().unwrap()
-                                .split(".").collect::<Vec<&str>>()[0]
-                            )
-                        ), &pic.data).unwrap();
+                        if temp.join(&nameer.file_name().unwrap().to_str().unwrap().replace(".mp3", ".jpg")).exists() {
+                            continue
+                        }
+                        let reader = image::load_from_memory(&pic.data);
+                        match reader {
+                            Ok(ready)=>{
+                                let resized = ready.resize(128, 128, image::imageops::Lanczos3);
+                                    resized.save(&temp.join(
+                                    format!(
+                                        "{}", &nameer.file_name().unwrap().to_str().unwrap().replace(".mp3", ".jpg")
+                                    ))
+                                ).unwrap();
+                            },
+                            Err(_)=>{
+                                std::fs::write(&temp.join(
+                                    format!(
+                                        "{}", &nameer.file_name().unwrap().to_str().unwrap().replace(".mp3", ".jpg")
+                                    )), &pic.data).unwrap();
+                            }
+                        }
+                        
                     }
             },
             id3::Result::Err(_)=> {
@@ -133,12 +165,17 @@ fn cover_caching() -> Vec<SongMeta>{
                         genre: "".to_string(),
                         year: 0,
                         duration: 0,
-                        no: couner
+                        no: couner,
+                        lyric: vec![String::from("")],
+                        cover: cover_ceck(temp.join(
+                            format!(
+                                "{}", &nameer.file_name().unwrap().to_str().unwrap().replace(".mp3", ".jpg")
+                            )
+                        ))
                 });
                 couner += 1;
             }
         }
-        // ! DEV
     }
     // songlist
     config
@@ -158,6 +195,17 @@ async fn config_load()->Result<String, String>{
 async fn config_save(ng:String){
     std::fs::write("./Config.json", ng).unwrap();
 }
+
+#[tauri::command]
+async fn load_playlist()->Result<String, String>{
+    let playlist_file = std::env::home_dir().unwrap().join("godplayer_playlist.json");
+    std::fs::read_to_string(playlist_file).map_err(|e| e.to_string())
+}
+#[tauri::command]
+async fn create_playlist(pl:String)->Result<() , String>{
+    let playlist_file = std::env::home_dir().unwrap().join("godplayer_playlist.json");
+    std::fs::write(playlist_file, pl).map_err(|e| e.to_string())
+}
 fn main() {
 
     // make temp dir
@@ -166,12 +214,11 @@ fn main() {
     ).unwrap_or_else(|e|println!("--ignore path exist {}", e));
 
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![songlist, config_load, config_save])
+        .invoke_handler(tauri::generate_handler![songlist, config_load, config_save, load_playlist, create_playlist])
         .register_uri_scheme_protocol("stream", |_app, req|{
             let uri = req.uri().trim()
             .split("stream://localhost/").last().unwrap();
             let music_path = urlencoding::decode(uri).unwrap().into_owned();
-            // !DEBUG
             let music = std::fs::read(music_path);
             match music {
                 Ok(musicbuff)=>{
@@ -193,8 +240,6 @@ fn main() {
                     .body("Error".as_bytes().to_vec())
                 }
             }
-            // !DEBUG
-            // OLD
         })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

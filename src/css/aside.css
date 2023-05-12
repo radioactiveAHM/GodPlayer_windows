@@ -97,3 +97,28 @@ aside>div.currentsong>img, aside>div.currentsong>svg{
     width: 100%;
     aspect-ratio: 1/1;
 }
+
+/* playlist switch */
+aside>.playlist{
+    height: 60px;
+    width: 100%;
+}
+aside>.playlist>div{
+    height: 100%;
+    width: 100%;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: var(--m1);
+}
+aside>.playlist>div>div{
+    height: 20px;
+    width: 100%;
+    background-color: var(--m2);
+    transition: transform 0.2s ease-in-out;
+    transform: translateY(0%);
+    padding: 2px;
+}
+aside>.playlist>div>div>svg{
+    height: 100%;
+    fill: var(--c2);
+}

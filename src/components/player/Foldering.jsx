@@ -10,6 +10,10 @@ function Foldering(){
     const [Config, SetConfig] = createSignal({});
     const [controller , Setcontroller] = createStore({value:""});
 
+    // new
+    // elements
+    let foldering;
+
     onMount(()=>{
         invoke("config_load").catch(e=>console.log(e))
         .then(raw=>{
@@ -61,9 +65,9 @@ function Foldering(){
     }
 
     return(
-        <div id="foldering">
+        <div id="foldering" ref={foldering}>
             <div class="exitfolder" 
-            onClick={()=>{document.getElementById("foldering").style.display = "none"}}
+            onClick={()=>{foldering.style.display = "none"}}
             ><div></div></div>
             <div class="ds">
                 <For each={folders()}>

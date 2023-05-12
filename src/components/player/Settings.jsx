@@ -60,6 +60,14 @@ function Settings (){
                         <label htmlFor="idcolor4">M2</label>
                         <input type="color" name="m2" id="idcolor4" value={config().m2} onChange={changeColorController}/>
                     </div>
+                    <div>
+                        <label htmlFor="idcolor4">T</label>
+                        <input type="color" name="t" id="idcolor5" value={config().t} onChange={changeColorController}/>
+                    </div>
+                    <div>
+                        <label htmlFor="idcolor4">HT</label>
+                        <input type="color" name="ht" id="idcolor6" value={config().ht} onChange={changeColorController}/>
+                    </div>
                 </div>
                 <input type="checkbox" name="active" id="active" onChange={changeColorController} checked={config().active}/>
             </div>

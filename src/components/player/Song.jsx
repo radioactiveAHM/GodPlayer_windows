@@ -1,11 +1,15 @@
 import { Icon } from "solid-heroicons";
-import { musicalNote} from "solid-heroicons/solid-mini";
+import { musicalNote } from "solid-heroicons/solid-mini";
 
 function Music(income) {
+    let bg = "";
+    if (income.count() % 2 != 0){
+        bg = "rgba(0,0,0,0.2)"
+    }
     return (
-    <li class="win" onclick={[income.play, income.song]} name={income.song.meta.no} id={"no"+income.song.meta.no}>
+    <li class="win" onclick={[income.play, income.song]} name={income.song.meta.no} id={"no"+income.song.meta.no} style={`background: ${bg};`}>
         <div class="cover_title">
-            {income.song.c ? <img src={income.song.c} /> : <Icon path={musicalNote} />}
+            {income.song.c!="https://stream.localhost/" ? <img width={80} height={80} src={income.song.c} /> : <Icon path={musicalNote} />}
             <p class="artist">
                 <span class="noV">{income.song.meta.no + ". "}</span>
                 {income.song.meta.artist != ""

@@ -13,6 +13,8 @@ function App() {
       color.style.setProperty("--c2", config.c2);
       color.style.setProperty("--m2", config.m2);
       color.style.setProperty("--m1", config.m1);
+      color.style.setProperty("--t", config.t);
+      color.style.setProperty("--ht", config.ht);
     }
   })
 

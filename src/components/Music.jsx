@@ -1,66 +1,65 @@
-import { createSignal, For, onMount } from "solid-js";
+import { createSignal, For, onMount, onCleanup, lazy, Suspense } from "solid-js";
 import Player from "./player/Player";
-import Song from "./player/Song";
 import Show from "./player/Show";
-import { readDir } from "@tauri-apps/api/fs";
-import { cacheDir } from "@tauri-apps/api/path";
+import Focus from "./player/Focus";
 import { invoke } from "@tauri-apps/api";
+
+// key shortcut
+import {register, unregisterAll} from "@tauri-apps/api/globalShortcut"
 
 // icon
 import { Icon } from "solid-heroicons";
 import { magnifyingGlass, musicalNote } from "solid-heroicons/solid-mini";
 
+// import Song from "./player/Song";
+// lazy import test
+const Song = lazy(()=>import("./player/Song"));
+
+let temp = [];
+
 function Music() {
   const [musics, SetMusics] = createSignal([]);
   const [current, SetCurrent] = createSignal("");
   const [currentsong, SetCurrentsong] = createSignal("");
-  const [coverBin, SetCoverBin] = createSignal();
   const [no, setNo] = createSignal(0);
   const [currentsongcover, SetCurrentsongcover] = createSignal();
   const [search, Setsearch] = createSignal([])
+  const [playlist, SetPlaylist] = createSignal([]);
+  const [currentRaw, SetCurrentRaw] = createSignal();
 
+  // NEW
+  // Elements
+  let ui;
+  let expand;
+  let seacher;
+  let switcher;
+
+  onCleanup(async ()=>{
+    await unregisterAll()
+  })
   onMount(async () => {
-    await cacheDir().then(async (dir) => {
-      // console.log(dir+"\\Temp\\godplayer");
-      await readDir(dir + "\\Temp\\godplayer")
-        .catch((e) => console.log(e))
-        .then(async (v) => {
-          let Llist = [];
-          for (let n_p of v) {
-            Llist.push({
-              name: n_p.name,
-              link: "https://stream.localhost/"+n_p.path,
-            });
-          }
-          SetCoverBin(Llist);
-        });
-    });
+    ui.style.filter = "blur(10px)";
+    invoke("load_playlist").catch(e=>{console.log(e)}).then(playlist=>{
+      SetPlaylist(JSON.parse(playlist));
+    })
+    await unregisterAll()
+    await register("Alt+N", ()=>{
+      next_s();
+    })
+    await register("Alt+B", ()=>{
+      back_s();
+    })
     await invoke("songlist").then((list) => {
       SetMusics(
-        list.map((v) => {
-          let link;
-          for (let match of coverBin()) {
-            if (
-              match.name.split(".")[0] == v.path.split(".")[0].split("\\").pop()
-            ) {
-              link = match.link;
-              break;
-            }
-          }
-          return { s: v.path, c: link, meta: v };
-        })
+        list.map((song)=>({ s: song.path, c: "https://stream.localhost/"+song.cover, meta: song }))
       );
     });
-    for (let i in musics()) {
-      if (parseInt(i) % 2 != 0) {
-        document.querySelector(
-          "li:nth-child(" + (parseInt(i) + 1) + ")"
-        ).style.background = "rgba(0,0,0,0.2)";
-      }
-    }
+    temp = musics();
+    ui.style.filter = "blur(0px)";
   });
 
   function play(song) {
+    SetCurrentRaw(song)
     SetCurrentsongcover({"cover":song.c, "meta":song.meta});
     setNo(song.meta.no);
     SetCurrentsong(song.s);
@@ -76,6 +75,7 @@ function Music() {
       // when shuffle active
       const chosen = songs_list[Math.floor(Math.random()*songs_list.length)];
       SetCurrentsongcover({"cover":chosen.c, "meta":chosen.meta});
+      SetCurrentRaw(chosen);
       setNo(chosen.meta.no);
       SetCurrent("https://stream.localhost/"+chosen.s);
       SetCurrentsong(chosen.s);
@@ -88,6 +88,7 @@ function Music() {
           let song = songs_list[parseInt(i) + 1];
           SetCurrentsongcover({"cover":song.c, "meta":song.meta});
           setNo(song.meta.no);
+          SetCurrentRaw(song);
           SetCurrent("https://stream.localhost/"+song.s);
           SetCurrentsong(song.s);
           document.getElementById("ap").play();
@@ -103,6 +104,7 @@ function Music() {
         let song = songs_list[parseInt(i) - 1];
         SetCurrentsongcover({"cover":song.c, "meta":song.meta});
         setNo(song.meta.no);
+        SetCurrentRaw(song);
         SetCurrent("https://stream.localhost/"+song.s);
         SetCurrentsong(song.s);
         document.getElementById("ap").play();
@@ -127,7 +129,7 @@ function Music() {
   }
 
   function empty_search(){
-    document.getElementById("seacher").value = "";
+    seacher.value = "";
     Setsearch([]);
   }
 
@@ -135,7 +137,7 @@ function Music() {
   function expander_stuff(hs){
     const aside = document.querySelector("aside");
     for (const child of aside.children){
-      if (child.className == "expander" || child.className == "show"){continue}
+      if (child.className == "expander" || child.className == "show" || child.className == "playlist"){continue}
       if (hs == 0){
         if (child.className == "search_icon"){
           child.style.display = "block";
@@ -156,29 +158,72 @@ function Music() {
     }
   }
   function expander(){
-    const ui = document.getElementById("ui");
     if (ui.style.gridTemplateColumns == "40px auto" || ui.style.gridTemplateColumns == ""){
       expander_stuff(1);
-      document.getElementById("expand").style.transform = "rotate(0deg)";
+      expand.style.transform = "rotate(0deg)";
       ui.style.gridTemplateColumns = "100px auto";
     }else{
       expander_stuff(0);
       setTimeout(()=>{
-        document.getElementById("expand").style.transform = "rotate(90deg)";
+        expand.style.transform = "rotate(90deg)";
       },400)
       ui.style.gridTemplateColumns = "40px auto";
     }
   }
+  function playlist_switcher(event){
+    // functions
+    function favList(){
+      SetMusics(playlist());
+    }
+    function mainList(){
+      SetMusics(temp);
+    }
+    function hide_focus(){
+      document.getElementsByClassName("focus")[0].style.display = "none"
+    }
+    function show_focus(){
+      document.getElementsByClassName("focus")[0].style.display = "block"
+    }
+
+    // NEW
+    if (event.target.attributes.name && event.target.attributes.name.value == "mode"){
+      if (0 < event.offsetY && event.offsetY < 20){
+        // styling and animation
+        switcher.style.transform = "translateY(0px)";
+        switcher.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="var(--m1)" viewBox="0 0 256 256"><path d="M212.92,25.69a8,8,0,0,0-6.86-1.45l-128,32A8,8,0,0,0,72,64V174.08A36,36,0,1,0,88,204V70.25l112-28v99.83A36,36,0,1,0,216,172V32A8,8,0,0,0,212.92,25.69Z"></path></svg>'
+        
+        // functionality
+        mainList();
+        hide_focus();
+      }
+      else if(20 < event.offsetY && event.offsetY < 40){
+        // styling and animation
+        switcher.style.transform = "translateY(20px)";
+        switcher.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="var(--m1)" viewBox="0 0 256 256"><path d="M240,94c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,220.66,16,164,16,94A62.07,62.07,0,0,1,78,32c20.65,0,38.73,8.88,50,23.89C139.27,40.88,157.35,32,178,32A62.07,62.07,0,0,1,240,94Z"></path></svg>';
+        
+        // functionality
+        favList()
+        hide_focus();
+      }
+      else if( 40 < event.offsetY && event.offsetY < 60){
+        // styling and animation
+        switcher.style.transform = "translateY(40px)";
+        switcher.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="var(--m1)" viewBox="0 0 256 256"><path d="M224,64v8a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V64a8,8,0,0,1,8-8H216A8,8,0,0,1,224,64Zm-8,32H40a8,8,0,0,0-8,8v8a8,8,0,0,0,8,8H216a8,8,0,0,0,8-8v-8A8,8,0,0,0,216,96Zm0,40H40a8,8,0,0,0-8,8v8a8,8,0,0,0,8,8H216a8,8,0,0,0,8-8v-8A8,8,0,0,0,216,136Zm0,40H40a8,8,0,0,0-8,8v8a8,8,0,0,0,8,8H216a8,8,0,0,0,8-8v-8A8,8,0,0,0,216,176Z"></path></svg>'
+        
+        // functionality
+        show_focus();
+      }
+    }
+  }
   // ▼ ►
   return (
-    <div id="ui" class="music">
-
+    <div ref={ui} class="music">
       <aside>
-        <div id="expand" class="expander" onClick={expander}><div></div><div></div></div>
+        <div ref={expand} class="expander" onClick={expander}><div></div><div></div></div>
         <div class="search_icon" onClick={expander}>
           <Icon path={magnifyingGlass}/>
         </div>
-        <input type="text" id="seacher" placeholder="Search" onInput={searcher}/>
+        <input type="text" ref={seacher} placeholder="Search" onInput={searcher}/>
         {search().length>0 && <div class="empty_search" onClick={empty_search}><p>Clear</p></div>}
         <div class="search_result">
             <For each={search()}>
@@ -193,6 +238,9 @@ function Music() {
         <Show
           musics = {musics}
         />
+        <div class="playlist" onClick={playlist_switcher}>
+          <div name="mode"><div ref={switcher}><svg xmlns="http://www.w3.org/2000/svg" fill="var(--m1)" viewBox="0 0 256 256"><path d="M212.92,25.69a8,8,0,0,0-6.86-1.45l-128,32A8,8,0,0,0,72,64V174.08A36,36,0,1,0,88,204V70.25l112-28v99.83A36,36,0,1,0,216,172V32A8,8,0,0,0,212.92,25.69Z"></path></svg></div></div>
+        </div>
         {currentsongcover() &&
         (<div class="currentsong">
           {currentsongcover().cover ? <img src={currentsongcover().cover}/> : <Icon path={musicalNote}/>}
@@ -203,26 +251,32 @@ function Music() {
         </div>)
         }
       </aside>
-
       <div class="songs">
         <ol>
           <For each={musics()}>
-            {(song) => (
+            {(song, i) => (
+              <Suspense fallback={<p>Loading...</p>}>
               <Song
                 song={song}
                 play={play}
+                count={i}
               />
+              </Suspense>
             )}
           </For>
         </ol>
+        <Focus
+          songraw={currentRaw}
+        />
       </div>
       <Player
         al={current() ? current() : ""}
-        // name={currentsong}
         next={next_s}
         back={back_s}
-        // ml={musics}
         no={no}
+        playlist={playlist}
+        setplaylist={SetPlaylist}
+        currentRaw={currentRaw}
       />
     </div>
   );

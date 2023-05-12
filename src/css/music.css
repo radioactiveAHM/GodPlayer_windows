@@ -14,6 +14,7 @@
 }
 
 .songs{
+    position: relative;
     grid-row: 1/2;
     grid-column: 2/3;
 
@@ -42,7 +43,7 @@
 }
 /* counting -> */
 span.noV{
-    color: rgba(0, 0, 0, 0.4);
+    color: var(--ht);
 }
 /* counting <- */
 .songs>ol>li{
@@ -70,7 +71,7 @@ span.noV{
     padding: 10px;
     max-width: 20%;
     gap: 5px;
-    color: rgba(0, 0, 0, 0.4);
+    color: var(--ht);
     text-align: right;
 }
 
@@ -86,6 +87,7 @@ span.noV{
 .songs>ol>li>div.cover_title>p{
     font-size: 1.2rem;
     text-transform: capitalize;
+    color: var(--t);
 }
 
 .songs>ol>li>div.meta>p.genre{

@@ -10,5 +10,6 @@ import "./css/theme.css"
 import "./css/foldering.css"
 import "./css/Settings.css"
 import "./css/aside.css"
+import "./css/focus.css"
 
 render(() => <App />, document.getElementById("root"));
