@@ -11,11 +11,12 @@ struct SongMeta{
     artist:String,
     title:String,
     genre:String,
-    year:i32,
+    date:String,
     duration:u32,
     no:usize,
     lyric: Vec<String>,
-    cover: std::path::PathBuf
+    cover: std::path::PathBuf,
+    modified: std::time::SystemTime
 }
 fn cover_ceck(p:std::path::PathBuf)->std::path::PathBuf{
     if p.exists(){
@@ -101,7 +102,7 @@ fn cover_caching() -> Vec<SongMeta>{
                             artist: "".to_string(),
                             title: song_f.to_str().unwrap().split("\\").last().unwrap().to_string(),
                             genre: "".to_string(),
-                            year: 0,
+                            date: s.date_recorded().unwrap_or_default().to_string(),
                             duration: 0,
                             no: couner,
                             lyric: vec![String::from("")],
@@ -109,7 +110,8 @@ fn cover_caching() -> Vec<SongMeta>{
                                 format!(
                                     "{}", &nameer.file_name().unwrap().to_str().unwrap().replace(".mp3", ".jpg")
                                 )
-                            ))
+                            )),
+                            modified: std::fs::metadata(song_f).unwrap().modified().unwrap()
                     });
                 } else {
                     config.push(
@@ -118,7 +120,7 @@ fn cover_caching() -> Vec<SongMeta>{
                             artist: s.artist().unwrap_or("").to_string(),
                             title: s.title().unwrap_or("").to_string(),
                             genre: s.genre().unwrap_or("").to_string(),
-                            year: s.date_recorded().unwrap_or_default().year,
+                            date: s.date_recorded().unwrap_or_default().to_string(),
                             duration: s.duration().unwrap_or(0),
                             no: couner,
                             lyric: s.lyrics().map(|ly| ly.to_string()).collect::<Vec<String>>(),
@@ -126,7 +128,8 @@ fn cover_caching() -> Vec<SongMeta>{
                                 format!(
                                     "{}", &nameer.file_name().unwrap().to_str().unwrap().replace(".mp3", ".jpg")
                                 )
-                            ))
+                            )),
+                            modified: std::fs::metadata(song_f).unwrap().modified().unwrap()
                     }
                 );
                 }
@@ -163,7 +166,7 @@ fn cover_caching() -> Vec<SongMeta>{
                         artist: "".to_string(),
                         title: song_f.to_str().unwrap().split("\\").last().unwrap().to_string(),
                         genre: "".to_string(),
-                        year: 0,
+                        date: String::new(),
                         duration: 0,
                         no: couner,
                         lyric: vec![String::from("")],
@@ -171,7 +174,8 @@ fn cover_caching() -> Vec<SongMeta>{
                             format!(
                                 "{}", &nameer.file_name().unwrap().to_str().unwrap().replace(".mp3", ".jpg")
                             )
-                        ))
+                        )),
+                        modified: std::fs::metadata(song_f).unwrap().modified().unwrap()
                 });
                 couner += 1;
             }

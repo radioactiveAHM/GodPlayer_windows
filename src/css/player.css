@@ -24,7 +24,7 @@ div.player>.shuffle{
     flex-grow: 1;
     position: relative;
     background-color: var(--m1);
-    border-radius: 20px 10px;
+    border-radius: 10px 20px;
     overflow: hidden;
 }
 #bar{

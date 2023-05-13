@@ -1,4 +1,4 @@
-import { createSignal, For, onMount, onCleanup, lazy, Suspense } from "solid-js";
+import { createSignal, Index, onMount, onCleanup, lazy, Suspense } from "solid-js";
 import Player from "./player/Player";
 import Show from "./player/Show";
 import Focus from "./player/Focus";
@@ -26,13 +26,16 @@ function Music() {
   const [search, Setsearch] = createSignal([])
   const [playlist, SetPlaylist] = createSignal([]);
   const [currentRaw, SetCurrentRaw] = createSignal();
-
+  const [sorted, Setsorted] = createSignal([]);
+  
+  let length = 0;
   // NEW
   // Elements
   let ui;
   let expand;
   let seacher;
   let switcher;
+  let sort_btn;
 
   onCleanup(async ()=>{
     await unregisterAll()
@@ -50,6 +53,7 @@ function Music() {
       back_s();
     })
     await invoke("songlist").then((list) => {
+      length = list.length;
       SetMusics(
         list.map((song)=>({ s: song.path, c: "https://stream.localhost/"+song.cover, meta: song }))
       );
@@ -137,7 +141,7 @@ function Music() {
   function expander_stuff(hs){
     const aside = document.querySelector("aside");
     for (const child of aside.children){
-      if (child.className == "expander" || child.className == "show" || child.className == "playlist"){continue}
+      if (child.className == "expander" || child.className == "show" || child.className == "playlist" || child.className== "sorting"){continue}
       if (hs == 0){
         if (child.className == "search_icon"){
           child.style.display = "block";
@@ -215,6 +219,32 @@ function Music() {
       }
     }
   }
+
+  async function sort(){
+    let sorter = musics();
+    switch (sort_btn.style.transform){
+      case "":
+        sort_btn.style.transform = "translateY(100%)";
+          sorter.sort((a, b)=>{
+            return (b.meta.modified.nanos_since_epoch - a.meta.modified.nanos_since_epoch)
+          });
+          sort_btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path d="M136,80v43.47l36.12,21.67a8,8,0,0,1-8.24,13.72l-40-24A8,8,0,0,1,120,128V80a8,8,0,0,1,16,0Zm88-24a8,8,0,0,0-8,8V82c-6.35-7.36-12.83-14.45-20.12-21.83a96,96,0,1,0-2,137.7,8,8,0,0,0-11-11.64A80,80,0,1,1,184.54,71.4C192.68,79.64,199.81,87.58,207,96H184a8,8,0,0,0,0,16h40a8,8,0,0,0,8-8V64A8,8,0,0,0,224,56Z"></path></svg>'
+        Setsorted(sorter);
+        break
+      case "translateY(0%)":
+        sort_btn.style.transform = "translateY(100%)";
+          sorter.sort((a, b)=>{
+            return (b.meta.modified.nanos_since_epoch - a.meta.modified.nanos_since_epoch)
+          });
+          sort_btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path d="M136,80v43.47l36.12,21.67a8,8,0,0,1-8.24,13.72l-40-24A8,8,0,0,1,120,128V80a8,8,0,0,1,16,0Zm88-24a8,8,0,0,0-8,8V82c-6.35-7.36-12.83-14.45-20.12-21.83a96,96,0,1,0-2,137.7,8,8,0,0,0-11-11.64A80,80,0,1,1,184.54,71.4C192.68,79.64,199.81,87.58,207,96H184a8,8,0,0,0,0,16h40a8,8,0,0,0,8-8V64A8,8,0,0,0,224,56Z"></path></svg>'
+        Setsorted(sorter);
+        break
+      case "translateY(100%)":
+        sort_btn.style.transform = "translateY(0%)";
+        location.reload();
+        break
+    }
+  }
   // ▼ ►
   return (
     <div ref={ui} class="music">
@@ -243,24 +273,27 @@ function Music() {
         </div>
         {currentsongcover() &&
         (<div class="currentsong">
-          {currentsongcover().cover ? <img src={currentsongcover().cover}/> : <Icon path={musicalNote}/>}
-          <p>{currentsongcover().meta.artist}</p>
-          <p>{currentsongcover().meta.title}</p>
-          <p>{currentsongcover().meta.year}</p>
-          <p>{musics().length + "/" + currentsongcover().meta.no}</p>
+          {currentsongcover().cover !== "https://stream.localhost/" ? <img src={currentsongcover().cover}/> : <Icon path={musicalNote}/>}
+          {currentsongcover().meta.artist && <p>{currentsongcover().meta.artist}</p>}
+          {currentsongcover().meta.title && <p>{currentsongcover().meta.title}</p>}
+          {(currentsongcover().meta.date!=="0000") && <p>{currentsongcover().meta.date}</p>}
+          <p>{length + "/" + currentsongcover().meta.no}</p>
         </div>)
         }
+        <div className="sorting" onClick={sort}><div ref={sort_btn}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path d="M87.24,52.59a8,8,0,0,0-14.48,0l-64,136a8,8,0,1,0,14.48,6.81L39.9,160h80.2l16.66,35.4a8,8,0,1,0,14.48-6.81ZM47.43,144,80,74.79,112.57,144ZM200,96c-12.76,0-22.73,3.47-29.63,10.32a8,8,0,0,0,11.26,11.36c3.8-3.77,10-5.68,18.37-5.68,13.23,0,24,9,24,20v3.22A42.76,42.76,0,0,0,200,128c-22.06,0-40,16.15-40,36s17.94,36,40,36a42.73,42.73,0,0,0,24-7.25,8,8,0,0,0,16-.75V132C240,112.15,222.06,96,200,96Zm0,88c-13.23,0-24-9-24-20s10.77-20,24-20,24,9,24,20S213.23,184,200,184Z"></path></svg>
+        </div></div>
       </aside>
       <div class="songs">
         <ol>
-          <For each={musics()}>
+          <For each={sorted().length===0 ? musics() : sorted()}>
             {(song, i) => (
               <Suspense fallback={<p>Loading...</p>}>
-              <Song
-                song={song}
-                play={play}
-                count={i}
-              />
+                <Song
+                  song={song}
+                  play={play}
+                  count={i}
+                />
               </Suspense>
             )}
           </For>

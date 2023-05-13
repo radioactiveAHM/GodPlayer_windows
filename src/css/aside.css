@@ -12,8 +12,7 @@ aside{
     overflow-y: scroll;
 }
 aside>.expander:hover, aside>.search_icon:hover, #folder:hover, #setting_icon:hover{
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 5px;
+    color: var(--c1);
 }
 
 aside::-webkit-scrollbar{
@@ -121,4 +120,33 @@ aside>.playlist>div>div{
 aside>.playlist>div>div>svg{
     height: 100%;
     fill: var(--c2);
+    transition: 100ms linear;
+}
+aside>.playlist>div>div>svg:hover{
+    filter: brightness(1.9);
+}
+
+/* sorting */
+aside>.sorting{
+    background-color: var(--m1);
+    width: 100%;
+    height: 50px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+aside>.sorting>div{
+    transform: translateY(0%);
+    transition: transform 0.2s ease-in-out;
+    padding: 2px;
+    width: 100%;
+    height: 50%;
+    background-color: var(--m2);
+}
+aside>.sorting>div>svg{
+    height: 100%;
+    fill: var(--c2);
+    transition: 100ms linear;
+}
+aside>.sorting>div>svg:hover{
+    filter: brightness(1.9);
 }
