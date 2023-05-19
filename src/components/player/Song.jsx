@@ -1,13 +1,18 @@
 import { Icon } from "solid-heroicons";
 import { musicalNote } from "solid-heroicons/solid-mini";
+import { onMount } from "solid-js";
 
 function Music(income) {
+    let li_s;
+    onMount(()=>{
+        income.ob.observe(li_s)
+    });
     let bg = "";
     if (income.count() % 2 != 0){
         bg = "rgba(0,0,0,0.2)"
     }
     return (
-    <li class="win" onclick={[income.play, income.song]} name={income.song.meta.no} id={"no"+income.song.meta.no} style={`background: ${bg};`}>
+    <li ref={li_s} class="win" onclick={[income.play, income.song]} name={income.song.meta.no} id={"no"+income.song.meta.no} style={`background: ${bg};`}>
         <div class="cover_title">
             {income.song.c!="https://stream.localhost/" ? <img width={80} height={80} src={income.song.c} /> : <Icon path={musicalNote} />}
             <p class="artist">

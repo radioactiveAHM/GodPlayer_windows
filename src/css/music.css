@@ -51,7 +51,6 @@ span.noV{
     height: 85px;
     display: flex;
     justify-content: space-between;
-    transition: 0.2s linear;
 }
 .songs>ol>li:hover{
     background-color: var(--c1) !important;
@@ -59,7 +58,7 @@ span.noV{
 
 /* both  */
 .songs>ol>li>div{
-    display: flex;
+    display: none;
     align-items: center;
 }
 .songs>ol>li>div.cover_title{
@@ -97,5 +96,3 @@ span.noV{
 .songs>ol>li>div.meta>p.genre::-webkit-scrollbar{
     display: none;
 }
-
-/* ! other form  -> */

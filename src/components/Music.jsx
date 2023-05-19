@@ -1,4 +1,4 @@
-import { createSignal, Index, onMount, onCleanup, lazy, Suspense } from "solid-js";
+import { createSignal, onMount, onCleanup, lazy, Suspense } from "solid-js";
 import Player from "./player/Player";
 import Show from "./player/Show";
 import Focus from "./player/Focus";
@@ -36,6 +36,7 @@ function Music() {
   let seacher;
   let switcher;
   let sort_btn;
+  let aside_controllers;
 
   onCleanup(async ()=>{
     await unregisterAll()
@@ -141,7 +142,7 @@ function Music() {
   function expander_stuff(hs){
     const aside = document.querySelector("aside");
     for (const child of aside.children){
-      if (child.className == "expander" || child.className == "show" || child.className == "playlist" || child.className== "sorting"){continue}
+      if (child.className == "expander" || child.className == "show" || child.className == "aside_controllers"){continue}
       if (hs == 0){
         if (child.className == "search_icon"){
           child.style.display = "block";
@@ -166,12 +167,14 @@ function Music() {
       expander_stuff(1);
       expand.style.transform = "rotate(0deg)";
       ui.style.gridTemplateColumns = "100px auto";
+      aside_controllers.style.flexDirection = "unset";
     }else{
       expander_stuff(0);
       setTimeout(()=>{
         expand.style.transform = "rotate(90deg)";
       },400)
       ui.style.gridTemplateColumns = "40px auto";
+      aside_controllers.style.flexDirection = "column";
     }
   }
   function playlist_switcher(event){
@@ -245,6 +248,26 @@ function Music() {
         break
     }
   }
+
+  let observer = new IntersectionObserver((els)=>{
+    for (let el of els){
+      if (el.isIntersecting){
+        // el.target.children
+        for (let child of el.target.children){
+          child.style.display = "flex"
+        }
+      }
+      else{
+        for (let child of el.target.children){
+          child.style.display = "none"
+        }
+      }
+    }
+  }, {
+    root: document.getElementsByName("ol")[0],
+    rootMargin:"0px",
+    threshold: 0.5
+  })
   // ▼ ►
   return (
     <div ref={ui} class="music">
@@ -268,8 +291,15 @@ function Music() {
         <Show
           musics = {musics}
         />
-        <div class="playlist" onClick={playlist_switcher}>
-          <div name="mode"><div ref={switcher}><svg xmlns="http://www.w3.org/2000/svg" fill="var(--m1)" viewBox="0 0 256 256"><path d="M212.92,25.69a8,8,0,0,0-6.86-1.45l-128,32A8,8,0,0,0,72,64V174.08A36,36,0,1,0,88,204V70.25l112-28v99.83A36,36,0,1,0,216,172V32A8,8,0,0,0,212.92,25.69Z"></path></svg></div></div>
+        <div ref={aside_controllers} class="aside_controllers">
+          <div class="playlist" onClick={playlist_switcher}>
+            <div name="mode"><div ref={switcher}><svg xmlns="http://www.w3.org/2000/svg" fill="var(--m1)" viewBox="0 0 256 256"><path d="M212.92,25.69a8,8,0,0,0-6.86-1.45l-128,32A8,8,0,0,0,72,64V174.08A36,36,0,1,0,88,204V70.25l112-28v99.83A36,36,0,1,0,216,172V32A8,8,0,0,0,212.92,25.69Z"></path></svg></div></div>
+          </div>
+          <div className="sorting" onClick={sort}>
+            <div ref={sort_btn}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path d="M87.24,52.59a8,8,0,0,0-14.48,0l-64,136a8,8,0,1,0,14.48,6.81L39.9,160h80.2l16.66,35.4a8,8,0,1,0,14.48-6.81ZM47.43,144,80,74.79,112.57,144ZM200,96c-12.76,0-22.73,3.47-29.63,10.32a8,8,0,0,0,11.26,11.36c3.8-3.77,10-5.68,18.37-5.68,13.23,0,24,9,24,20v3.22A42.76,42.76,0,0,0,200,128c-22.06,0-40,16.15-40,36s17.94,36,40,36a42.73,42.73,0,0,0,24-7.25,8,8,0,0,0,16-.75V132C240,112.15,222.06,96,200,96Zm0,88c-13.23,0-24-9-24-20s10.77-20,24-20,24,9,24,20S213.23,184,200,184Z"></path></svg>
+            </div>
+          </div>
         </div>
         {currentsongcover() &&
         (<div class="currentsong">
@@ -280,9 +310,6 @@ function Music() {
           <p>{length + "/" + currentsongcover().meta.no}</p>
         </div>)
         }
-        <div className="sorting" onClick={sort}><div ref={sort_btn}>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path d="M87.24,52.59a8,8,0,0,0-14.48,0l-64,136a8,8,0,1,0,14.48,6.81L39.9,160h80.2l16.66,35.4a8,8,0,1,0,14.48-6.81ZM47.43,144,80,74.79,112.57,144ZM200,96c-12.76,0-22.73,3.47-29.63,10.32a8,8,0,0,0,11.26,11.36c3.8-3.77,10-5.68,18.37-5.68,13.23,0,24,9,24,20v3.22A42.76,42.76,0,0,0,200,128c-22.06,0-40,16.15-40,36s17.94,36,40,36a42.73,42.73,0,0,0,24-7.25,8,8,0,0,0,16-.75V132C240,112.15,222.06,96,200,96Zm0,88c-13.23,0-24-9-24-20s10.77-20,24-20,24,9,24,20S213.23,184,200,184Z"></path></svg>
-        </div></div>
       </aside>
       <div class="songs">
         <ol>
@@ -293,6 +320,7 @@ function Music() {
                   song={song}
                   play={play}
                   count={i}
+                  ob={observer}
                 />
               </Suspense>
             )}

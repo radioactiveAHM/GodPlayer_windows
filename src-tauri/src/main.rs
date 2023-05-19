@@ -2,6 +2,7 @@
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
 )]
+#![allow(deprecated)]
 
 use id3::{Tag, TagLike};
 
@@ -26,6 +27,7 @@ fn cover_ceck(p:std::path::PathBuf)->std::path::PathBuf{
     }
 }
 
+#[allow(dead_code)]
 #[derive(serde::Deserialize)]
 struct AppConfig{
     dir: Vec<String>,

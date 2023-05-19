@@ -97,19 +97,26 @@ aside>div.currentsong>img, aside>div.currentsong>svg{
     aspect-ratio: 1/1;
 }
 
-/* playlist switch */
-aside>.playlist{
-    height: 60px;
+aside>.aside_controllers{
+    display: flex;
     width: 100%;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
 }
-aside>.playlist>div{
+/* playlist switch */
+aside>.aside_controllers>.playlist{
+    height: 60px;
+    flex-grow: 1;
+}
+aside>.aside_controllers>.playlist>div{
     height: 100%;
     width: 100%;
     border-radius: 5px;
     overflow: hidden;
     background-color: var(--m1);
 }
-aside>.playlist>div>div{
+aside>.aside_controllers>.playlist>div>div{
     height: 20px;
     width: 100%;
     background-color: var(--m2);
@@ -117,24 +124,24 @@ aside>.playlist>div>div{
     transform: translateY(0%);
     padding: 2px;
 }
-aside>.playlist>div>div>svg{
+aside>.aside_controllers>.playlist>div>div>svg{
     height: 100%;
     fill: var(--c2);
     transition: 100ms linear;
 }
-aside>.playlist>div>div>svg:hover{
+aside>.aside_controllers>.playlist>div>div>svg:hover{
     filter: brightness(1.9);
 }
 
 /* sorting */
-aside>.sorting{
+aside>.aside_controllers>.sorting{
     background-color: var(--m1);
-    width: 100%;
-    height: 50px;
+    flex-grow: 1;
+    height: 60px;
     border-radius: 5px;
     overflow: hidden;
 }
-aside>.sorting>div{
+aside>.aside_controllers>.sorting>div{
     transform: translateY(0%);
     transition: transform 0.2s ease-in-out;
     padding: 2px;
@@ -142,11 +149,11 @@ aside>.sorting>div{
     height: 50%;
     background-color: var(--m2);
 }
-aside>.sorting>div>svg{
+aside>.aside_controllers>.sorting>div>svg{
     height: 100%;
     fill: var(--c2);
     transition: 100ms linear;
 }
-aside>.sorting>div>svg:hover{
+aside>.aside_controllers>.sorting>div>svg:hover{
     filter: brightness(1.9);
 }
