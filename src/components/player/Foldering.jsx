@@ -24,8 +24,8 @@ function Foldering(){
     })
 
     async function pathadd(){
-        if (controller.value != ""){
-            let t = Config().dir;
+        if (controller.value !== ""){
+            const t = Config().dir;
             t.push(controller.value);
             setFolders(t);
             SetConfig({
@@ -43,14 +43,11 @@ function Foldering(){
     }
 
     async function removepath(event){
-        let path = event.target.parentElement.children[0].textContent;
+        const path = event.target.parentElement.children[0].textContent;
         // Setcontroller
-        let temp = [];
-        for (let p of Config().dir){
-            if (p==path){
-                continue
-            }
-            else{
+        const temp = [];
+        for (const p of Config().dir){
+            if (p!==path){
                 temp.push(p);
             }
         }

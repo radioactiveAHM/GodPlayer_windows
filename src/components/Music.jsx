@@ -76,7 +76,7 @@ function Music() {
     // setup shuffle
     // NEW
     const songs_list = musics();
-    if (document.getElementById("shuffle_id").getAttribute("name")=="enabled"){
+    if (document.getElementById("shuffle_id").getAttribute("name")==="enabled"){
       // when shuffle active
       const chosen = songs_list[Math.floor(Math.random()*songs_list.length)];
       SetCurrentsongcover({"cover":chosen.c, "meta":chosen.meta});
@@ -87,10 +87,9 @@ function Music() {
       document.getElementById("ap").play();
 
     } else {
-
-      for (let i in songs_list) {
-        if (songs_list[i].s == currentsong()) {
-          let song = songs_list[parseInt(i) + 1];
+      for (const i in songs_list) {
+        if (songs_list[i].s === currentsong()) {
+          const song = songs_list[Number.parseInt(i) + 1];
           SetCurrentsongcover({"cover":song.c, "meta":song.meta});
           setNo(song.meta.no);
           SetCurrentRaw(song);
@@ -104,9 +103,9 @@ function Music() {
   }
   async function back_s() {
     const songs_list = musics();
-    for (let i in songs_list) {
-      if (songs_list[i].s == currentsong()) {
-        let song = songs_list[parseInt(i) - 1];
+    for (const i in songs_list) {
+      if (songs_list[i].s === currentsong()) {
+        const song = songs_list[Number.parseInt(i) - 1];
         SetCurrentsongcover({"cover":song.c, "meta":song.meta});
         setNo(song.meta.no);
         SetCurrentRaw(song);
@@ -118,13 +117,13 @@ function Music() {
     }
   }
   function searcher(event){
-    let search = event.target.value.toLowerCase();
-    let result = [];
-    if (event.target.value == "" || event.target.value == " "){
+    const search = event.target.value.toLowerCase();
+    const result = [];
+    if (event.target.value === "" || event.target.value === " "){
       Setsearch([]);
     }
     else{
-      for (let music of musics()){
+      for (const music of musics()){
         if (music.meta.title.toLowerCase().includes(search) || music.meta.artist.toLowerCase().includes(search)){
           result.push(music);
         }
@@ -142,18 +141,18 @@ function Music() {
   function expander_stuff(hs){
     const aside = document.querySelector("aside");
     for (const child of aside.children){
-      if (child.className == "expander" || child.className == "show" || child.className == "aside_controllers"){continue}
-      if (hs == 0){
-        if (child.className == "search_icon"){
+      if (child.className === "expander" || child.className === "show" || child.className === "aside_controllers"){continue}
+      if (hs === 0){
+        if (child.className === "search_icon"){
           child.style.display = "block";
         }else{
           child.style.display = "none";
         }
-      } else if (hs == 1){
-        if (child.className == "currentsong"){
+      } else if (hs === 1){
+        if (child.className === "currentsong"){
           child.style.display = "block";
         }
-        else if (child.className == "search_icon"){
+        else if (child.className === "search_icon"){
           child.style.display = "none";
         }
         else{
@@ -163,7 +162,7 @@ function Music() {
     }
   }
   function expander(){
-    if (ui.style.gridTemplateColumns == "40px auto" || ui.style.gridTemplateColumns == ""){
+    if (ui.style.gridTemplateColumns === "40px auto" || ui.style.gridTemplateColumns === ""){
       expander_stuff(1);
       expand.style.transform = "rotate(0deg)";
       ui.style.gridTemplateColumns = "100px auto";
@@ -193,7 +192,7 @@ function Music() {
     }
 
     // NEW
-    if (event.target.attributes.name && event.target.attributes.name.value == "mode"){
+    if (event.target.attributes.name && event.target.attributes.name.value === "mode"){
       if (0 < event.offsetY && event.offsetY < 20){
         // styling and animation
         switcher.style.transform = "translateY(0px)";
@@ -224,7 +223,7 @@ function Music() {
   }
 
   async function sort(){
-    let sorter = musics();
+    const sorter = musics();
     switch (sort_btn.style.transform){
       case "":
         sort_btn.style.transform = "translateY(100%)";
@@ -249,16 +248,16 @@ function Music() {
     }
   }
 
-  let observer = new IntersectionObserver((els)=>{
-    for (let el of els){
+  const observer = new IntersectionObserver((els)=>{
+    for (const el of els){
       if (el.isIntersecting){
         // el.target.children
-        for (let child of el.target.children){
+        for (const child of el.target.children){
           child.style.display = "flex"
         }
       }
       else{
-        for (let child of el.target.children){
+        for (const child of el.target.children){
           child.style.display = "none"
         }
       }

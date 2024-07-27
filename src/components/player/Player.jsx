@@ -47,7 +47,7 @@ function Player(income){
         const li_el = document.querySelector(`[name="${no}"]`);
         // li_el.style.background = "var(--c1)";
 
-        if (ex == undefined){
+        if (ex === undefined){
             ex = [li_el, li_el.style.background];
             li_el.style.background = "var(--c1)";
         }else{
@@ -58,12 +58,12 @@ function Player(income){
     }
 
     function playerAction(){
-        let Tsec = (ap.currentTime).toFixed(0);
-        let Tmin = Math.floor(Tsec / 60);
-        let sec = Tsec % 60;
-        let min = Tmin % 60;
-        let fsec = (sec/100).toPrecision(2);
-        let fmin = (min/100).toPrecision(2)
+        const Tsec = (ap.currentTime).toFixed(0);
+        const Tmin = Math.floor(Tsec / 60);
+        const sec = Tsec % 60;
+        const min = Tmin % 60;
+        const fsec = (sec/100).toPrecision(2);
+        const fmin = (min/100).toPrecision(2)
         dur.innerText = (fmin[2] || "0")+(fmin[3] || "0")+":"+(fsec[2] || "0")+(fsec[3] || "0");
         bar.style.width = ((ap.currentTime / ap.duration)*100).toPrecision(3)+"%";
     }
@@ -92,7 +92,7 @@ function Player(income){
     }
 
     function shuffling(){
-        if (shuffle.getAttribute("name") == "disabled"){
+        if (shuffle.getAttribute("name") === "disabled"){
             shuffle.setAttribute("name", "enabled");
             shuffle.style.border = "2px solid var(--m2)";
         } else {
@@ -103,14 +103,13 @@ function Player(income){
 
     function like(){
         const heart = document.getElementById("heart");
-        if (heart.style.fill == "var(--m1)" || heart.getAttribute("fill")=="var(--m1)"){
+        if (heart.style.fill === "var(--m1)" || heart.getAttribute("fill")==="var(--m1)"){
             heart.style.fill = "var(--m2)";
             income.setplaylist(ex=>{
                 if (!ex.includes(income.currentRaw())){
                     return [income.currentRaw(), ...ex]
-                }else{
-                    return ex
                 }
+                return ex
             })
             invoke("create_playlist", {"pl":JSON.stringify(income.playlist())}).catch(e=>console.log(e)).then((m)=>{
                 console.log(m);
@@ -133,8 +132,8 @@ function Player(income){
 
     function like_match(a, b){
         if (a && b){
-            for (let song of a){
-                if (song.s==b.s){
+            for (const song of a){
+                if (song.s===b.s){
                     return true;
                 }
             }

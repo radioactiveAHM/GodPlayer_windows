@@ -27,7 +27,7 @@ function Settings (){
     }
 
     function changeColorController(event){
-        if (event.target.name == "active"){
+        if (event.target.name === "active"){
             SetColors(prev=>{
                 return {...prev, "active":event.target.checked}
             })

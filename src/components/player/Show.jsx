@@ -7,7 +7,7 @@ function Show(income) {
 
     function sf(){
         const f = document.getElementById("foldering");
-        if (f.style.display == "none" || f.style.display == ""){
+        if (f.style.display === "none" || f.style.display === ""){
             f.style.display = "flex"
         }
         else{
