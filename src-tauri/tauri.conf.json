@@ -1,59 +1,55 @@
 {
-  "build": {
-    "beforeDevCommand": "npm run dev",
-    "beforeBuildCommand": "npm run build",
-    "devPath": "http://localhost:1420",
-    "distDir": "../dist",
-    "withGlobalTauri": false
-  },
-  "package": {
-    "productName": "godplayer",
-    "version": "0.5.5"
-  },
-  "tauri": {
-    "allowlist": {
-      "all": false,
-      "shell": {
-        "all": false,
-        "open": true
-      },
-      "path":{
-        "all":true
-      },
-      "fs":{
-        "scope":["$TEMP", "$TEMP/*"],
-        "readFile":true,
-        "readDir":true
-      }
-      ,
-      "globalShortcut":{
-        "all":true
-      }
-    },
-    "bundle": {
-      "active": true,
-      "icon": [
-		"icons/512x512.png",
-        "icons/icon.ico"
-      ],
-      "identifier": "com.godplayer.dev",
-      "resources": ["./Config.json"],
-      "targets": "all"
-    },
-    "security": {
-      "csp": null
-    },
-    "updater": {
-      "active": false
-    },
-    "windows": [
-      {
-        "fullscreen": false,
-        "height": 700,
-        "resizable": true,
-        "title": "Godplayer",
-        "width": 1200
-      }
-    ]
-  }
+	"build": {
+		"beforeDevCommand": "npm run dev",
+		"beforeBuildCommand": "npm run build",
+		"devPath": "http://localhost:1420",
+		"distDir": "../dist",
+		"withGlobalTauri": false
+	},
+	"package": {
+		"productName": "godplayer",
+		"version": "0.6.0"
+	},
+	"tauri": {
+		"allowlist": {
+			"all": false,
+			"shell": {
+				"all": false,
+				"open": true
+			},
+			"path": {
+				"all": true
+			},
+			"fs": {
+				"scope": ["$TEMP", "$TEMP/*"],
+				"readFile": true,
+				"readDir": true
+			},
+			"globalShortcut": {
+				"all": true
+			}
+		},
+		"bundle": {
+			"active": true,
+			"icon": ["icons/512x512.png", "icons/icon.ico"],
+			"identifier": "com.godplayer.dev",
+			"resources": [],
+			"targets": "all"
+		},
+		"security": {
+			"csp": null
+		},
+		"updater": {
+			"active": false
+		},
+		"windows": [
+			{
+				"fullscreen": false,
+				"height": 700,
+				"resizable": true,
+				"title": "Godplayer",
+				"width": 1200
+			}
+		]
+	}
 }
