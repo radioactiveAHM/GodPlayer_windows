@@ -3,10 +3,15 @@
     windows_subsystem = "windows"
 )]
 
-use std::{num::NonZero, path::PathBuf, sync::{Arc, Mutex}};
+use std::{num::NonZero, path::PathBuf, sync::{mpsc::channel, Arc}};
 
 use id3::{Tag, TagLike};
 use tauri::api::path::home_dir;
+
+enum ChD {
+    Data(SongMeta),
+    End
+}
 
 #[derive(serde::Serialize, Clone)]
 struct SongMeta {
@@ -109,16 +114,15 @@ fn cover_caching() -> Vec<SongMeta> {
         dirs = dirs_temp;
     }
 
+    let (ch_send, ch_rcv) = channel();
+
     let cpu = std::thread::available_parallelism().unwrap_or(NonZero::new(2).unwrap());
     let arc_songs_list = Arc::new(songs_list);
-    let config: Arc<Mutex<Vec<SongMeta>>> = Arc::new(Mutex::new(Vec::new()));
-    let couner = Arc::new(Mutex::new(1));
     let mut handlers = Vec::new();
     let share = arc_songs_list.len()/cpu.get();
     for thread_n in 0..cpu.get() {
         let arc_songs_list = arc_songs_list.clone();
-        let config = config.clone();
-        let couner = couner.clone();
+        let ch_send = ch_send.clone();
         let temp = temp.clone();
         handlers.push(
             std::thread::spawn(move||{
@@ -129,32 +133,37 @@ fn cover_caching() -> Vec<SongMeta> {
                         &arc_songs_list[(share*thread_n)..(share*(thread_n+1))]
                     }
                 };
+                let mut counter = share*thread_n;
                 for song_f in songs_list{
                     let nameer = song_f.clone();
                     let cover_name = nameer.file_name().unwrap().to_str().unwrap().replace(".mp3", ".jpg");
                     if let Ok(s) = Tag::read_from_path(&nameer) {
-                        config.lock().unwrap().push(SongMeta {
-                            path: song_f.clone(),
-                            artist: s.artist().unwrap_or("").to_string(),
-                            title: s
-                                .title()
-                                .unwrap_or(&song_f.to_str().unwrap().split("\\").last().unwrap())
-                                .to_string(),
-                            genre: s.genre().unwrap_or("").to_string(),
-                            date: s.date_recorded().unwrap_or_default().to_string(),
-                            duration: s.duration().unwrap_or_default(),
-                            no: *couner.lock().unwrap(),
-                            lyric: s.lyrics().map(|ly| ly.to_string()).collect::<Vec<String>>(),
-                            cover: cover_ceck(temp.join(format!("{}", &cover_name))),
-                            modified: std::fs::metadata(&song_f).unwrap().created().unwrap(),
-                        });
-                        *couner.lock().unwrap() += 1;
+                        ch_send.send(
+                            ChD::Data(
+                                SongMeta {
+                                    path: song_f.clone(),
+                                    artist: s.artist().unwrap_or("").to_string(),
+                                    title: s
+                                        .title()
+                                        .unwrap_or(&song_f.to_str().unwrap().split("\\").last().unwrap())
+                                        .to_string(),
+                                    genre: s.genre().unwrap_or("").to_string(),
+                                    date: s.date_recorded().unwrap_or_default().to_string(),
+                                    duration: s.duration().unwrap_or_default(),
+                                    no: counter,
+                                    lyric: s.lyrics().map(|ly| ly.to_string()).collect::<Vec<String>>(),
+                                    cover: cover_ceck(temp.join(format!("{}", &cover_name))),
+                                    modified: std::fs::metadata(&song_f).unwrap().created().unwrap(),
+                                }
+                            )
+                        ).unwrap();
+                        counter += 1;
                         // save pictures to temp folders
                         for pic in s.pictures() {
                             if !temp.join(&cover_name).exists() {
                                 match image::load_from_memory(&pic.data) {
                                     Ok(ready) => {
-                                        let resized = ready.resize(128, 128, image::imageops::Nearest);
+                                        let resized = ready.resize(64, 64, image::imageops::Nearest);
                                         resized.save(&temp.join(format!("{}", cover_name))).unwrap();
                                     }
                                     Err(_) => (),
@@ -163,15 +172,25 @@ fn cover_caching() -> Vec<SongMeta> {
                         }
                     }
                 }
+                ch_send.send(ChD::End).unwrap();
             })
         )
     }
-    for handler in handlers {
-        handler.join().unwrap();
+
+    let mut songmetalist = Vec::with_capacity(arc_songs_list.len());
+    let mut finished_th = 0;
+    loop {
+        if finished_th==handlers.len() {
+            break;
+        }
+        if let ChD::Data(songmeta) = ch_rcv.recv().unwrap() {
+            songmetalist.push(songmeta);
+        } else {
+            finished_th += 1;
+        }
     }
 
-    let c = config.lock().unwrap().to_owned();
-    c
+    songmetalist
 }
 
 #[tauri::command]
